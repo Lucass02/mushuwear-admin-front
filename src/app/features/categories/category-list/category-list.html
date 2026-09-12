@@ -1,6 +1,27 @@
 <div class="category-list-container">
   <h1>Categorías</h1>
 
+  <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" class="category-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre de la categoría</mat-label>
+      <input matInput formControlName="name" />
+      @if (categoryForm.get('name')?.hasError('required')) {
+        <mat-error>El nombre es obligatorio</mat-error>
+      }
+      @if (categoryForm.get('name')?.hasError('maxlength')) {
+        <mat-error>Máximo 100 caracteres</mat-error>
+      }
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="isSaving()">
+      {{ isSaving() ? 'Guardando...' : (editingId() ? 'Actualizar' : 'Crear categoría') }}
+    </button>
+
+    @if (editingId()) {
+      <button mat-button type="button" (click)="cancelEdit()">Cancelar</button>
+    }
+  </form>
+
   @if (isLoading()) {
     <mat-spinner></mat-spinner>
   } @else {
@@ -13,6 +34,18 @@
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef>Nombre</th>
         <td mat-cell *matCellDef="let category">{{ category.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let category">
+          <button mat-icon-button (click)="startEdit(category)" aria-label="Editar">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteCategory(category)" aria-label="Eliminar">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
