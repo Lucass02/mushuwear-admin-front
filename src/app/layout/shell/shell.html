@@ -1,0 +1,36 @@
+<mat-sidenav-container class="shell-container">
+  <mat-sidenav mode="side" opened class="shell-sidenav">
+    <mat-toolbar>MushuWear Admin</mat-toolbar>
+
+    @for (group of navGroups; track group.label) {
+      <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>{{ group.icon }}</mat-icon>
+            {{ group.label }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-nav-list>
+          @for (item of group.items; track item.path) {
+            
+            <a mat-list-item
+              [routerLink]="item.path"
+              routerLinkActive="active-link"
+            >
+              <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+              <span matListItemTitle>{{ item.label }}</span>
+            </a>
+          }
+        </mat-nav-list>
+      </mat-expansion-panel>
+    }
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">Panel administrativo</mat-toolbar>
+    <div class="shell-content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
